@@ -39,13 +39,26 @@ public class MainController extends Print{
 			case ACCOUNT:
 				view = account();
 				break;
-				
-			case FIND_ID:
-				view = findId();
+//				0415
+			case MEMBER_ACCOUNT:
+				view = memberAccount();
 				break;
-			case FIND_PASSWORD:
-				view = findPassword();
+			case MEMBER_FIND_ID:
+				view = memFindId();
 				break;
+			case MEMBER_UPDATE_PASSWORD:
+				view = memUpdatePassword();
+				break;
+			case ADMIN_ACCOUNT:
+				view = adminAccount();
+				break;
+			case ADMIN_FIND_ID:
+				view = 	adFindId();
+				break;
+			case ADMIN_UPDATE_PASSWORD:
+				view = adUpdatePassword();
+				break;
+//				0415
 				
 			case MEMBER_LOGIN:
 				view = memberLogin();
@@ -173,7 +186,7 @@ public class MainController extends Print{
 
 	private View postInsert() {
 
-		System.out.println("/n 문의글 등록 /n");
+		System.out.println("\n 문의글 등록 \n");
 		
 		MemberVo member = (MemberVo) sessionStorage.get("member");
 		int memNo = member.getMem_no();
@@ -249,8 +262,8 @@ public class MainController extends Print{
 		default: return View.HOME;
 		}
 	}
-
-	private View findId() {
+	// 0415
+	private View memFindId() {
 		String name = ScanUtil.nextLine("\n회원 이름 : ");
 		String cp = ScanUtil.nextLine("\n회원 휴대폰 번호 : ");
 		
@@ -258,33 +271,113 @@ public class MainController extends Print{
 		param.add(name);
 		param.add(cp);
 		
-		boolean findId = memberService.findId(param);
-		if(!findId) {
+		MemberVo member = memberService.memFindId(param);
+		if(member == null) {
 			System.out.println("\n등록되지 않은 정보입니다.\n");
-			return View.FIND_ID;
+			return View.MEMBER_FIND_ID;
 		}
 		
+		System.out.println("\n회원 아이디 : " + member.getMem_id());
 		return View.LOGIN;
 	}
 
-	private View findPassword() {
-		// TODO Auto-generated method stub
-		return null;
+	private View memUpdatePassword() {
+	    String name = ScanUtil.nextLine("\n회원 이름 : ");
+	    String cp = ScanUtil.nextLine("\n회원 휴대폰 번호 : ");
+
+	    boolean checkMember = memberService.checkMember(name, cp);
+	    if (!checkMember) {
+	        printVar();
+	        System.out.println("\n등록되지 않은 정보입니다.\n");
+	        printVar();
+	        return View.MEMBER_UPDATE_PASSWORD;
+	    }
+
+	    String newPassword = ScanUtil.nextLine("\n새 비밀번호를 입력해주세요 : ");
+	    System.out.println("\n비밀번호가 성공적으로 변경되었습니다.");
+	    List<Object> param = new ArrayList<>();
+	    param.add(newPassword);
+	    memberService.memUpdatePassword(name, cp, newPassword);
+	    return View.MEMBER_LOGIN;
 	}
 	
+	private View adFindId() {
+		String name = ScanUtil.nextLine("\n회원 이름 : ");
+		String cp = ScanUtil.nextLine("\n회원 휴대폰 번호 : ");
+		
+		List<Object> param = new ArrayList<>();
+		param.add(name);
+		param.add(cp);
+		
+		MemberVo member = memberService.memFindId(param);
+		if(member == null) {
+			System.out.println("\n등록되지 않은 정보입니다.\n");
+			return View.MEMBER_FIND_ID;
+		}
+		
+		System.out.println("\n회원 아이디 : " + member.getMem_id());
+		return View.LOGIN;
+	}
+	
+	private View adUpdatePassword() {
+		String name = ScanUtil.nextLine("\n회원 이름 : ");
+		String cp = ScanUtil.nextLine("\n회원 휴대폰 번호 : ");
+		
+		boolean checkMember = memberService.checkMember(name, cp);
+		if (!checkMember) {
+			printVar();
+			System.out.println("\n등록되지 않은 정보입니다.\n");
+			printVar();
+			return View.MEMBER_UPDATE_PASSWORD;
+		}
+		
+		String newPassword = ScanUtil.nextLine("\n새 비밀번호를 입력해주세요 : ");
+		System.out.println("\n비밀번호가 성공적으로 변경되었습니다.");
+		List<Object> param = new ArrayList<>();
+		param.add(newPassword);
+		memberService.memUpdatePassword(name, cp, newPassword);
+		return View.MEMBER_LOGIN;
+	}
+
 	private View account() {
+		System.out.println("1. 회원 계정 찾기");
+		System.out.println("2. 관리자 계정 찾기");
+		
+		int sel = ScanUtil.nextInt("\n메뉴 선택 : ");
+		printVar();
+		switch (sel) {
+		case 1: return View.MEMBER_ACCOUNT;
+		case 2: return View.MEMBER_UPDATE_PASSWORD;
+		default: return View.ACCOUNT;
+		}
+	}
+	
+	private View adminAccount() {
 		System.out.println("1. 아이디 찾기");
 		System.out.println("2. 비밀번호 찾기");
 		
 		int sel = ScanUtil.nextInt("\n메뉴 선택 : ");
 		printVar();
 		switch (sel) {
-		case 1: return View.FIND_ID;
-		case 2: return View.FIND_PASSWORD;
+		case 1: return View.MEMBER_FIND_ID;
+		case 2: return View.MEMBER_UPDATE_PASSWORD;
 		default: return View.ACCOUNT;
 		}
 	}
-
+	
+	private View memberAccount() {
+		System.out.println("1. 아이디 찾기");
+		System.out.println("2. 비밀번호 찾기");
+		
+		int sel = ScanUtil.nextInt("\n메뉴 선택 : ");
+		printVar();
+		switch (sel) {
+		case 1: return View.MEMBER_FIND_ID;
+		case 2: return View.MEMBER_UPDATE_PASSWORD;
+		default: return View.MEMBER_ACCOUNT;
+		}
+	}
+//	0415
 	private View adminSign() {
 		String id = ScanUtil.nextLine("\n아이디 (영문 5자 이상 15자 이하) : ");
 		String pw = ScanUtil.nextLine("비밀번호 (5자 이상 15자 이하) : ");

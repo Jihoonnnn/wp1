@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import controller.MainController;
@@ -22,17 +23,35 @@ public class MemberService {
 	}
 	
 	MemberDao memberDao = MemberDao.getInstance();
-	
-	public boolean findId(List<Object> param) {
-		MemberVo member = memberDao.findId(param);
-		if(member == null) {
-			return false;
-		}
-		MainController.sessionStorage.put("member", member);
-		
-		return true;
+//	0415
+	public boolean checkMember(String name, String cp) {
+	    List<Object> param = new ArrayList<>();
+	    param.add(name);
+	    param.add(cp);
+	    MemberVo member = memberDao.checkMember(param);
+	    if(member == null) {
+	        return false;
+	    }
+	    MainController.sessionStorage.put("member", member);
+	    return true;
 	}
 	
+	public void memUpdatePassword(String name, String cp, String newPassword) {
+	    List<Object> param = new ArrayList<>();
+	    param.add(newPassword);
+	    param.add(name);
+	    param.add(cp);
+	    memberDao.memUpdatePassword(param);
+	}
+
+	public MemberVo memFindId(List<Object> param) {
+		MemberVo member = memberDao.memFindId(param);
+		if(member != null) {
+			MainController.sessionStorage.put("member", member);
+		}
+		return member;
+	}
+// 	0415
 	public boolean memberLogin(List<Object> param) {
 		MemberVo member = memberDao.memberLogin(param);
 		if(member == null) {

@@ -21,17 +21,36 @@ public class MemberDao {
 	}
 	
 	JDBCUtil jdbc = JDBCUtil.getInstance();
-	
-	public MemberVo findId(List<Object> param) {
-		String sql = " SELECT SUBSTR(MEM_ID, 1, LENGTH(MEM_ID) - 3) || '***'\r\n " + 
-					 " FROM MEMBER\r\n " + 
-					 " WHERE MEM_NAME = ? \r\n " + 
-					 " AND MEM_CP = ? \r\n " + 
-					 " AND MEM_DELYN = 'N' ";
+// 0415
+	public MemberVo checkMember(List<Object> param) {
+		String sql = " SELECT *\r\n " + 
+				" FROM MEMBER\r\n " + 
+				" WHERE MEM_NAME = ? \r\n " + 
+				" AND MEM_CP = ? \r\n " + 
+				" AND MEM_DELYN = 'N' ";
 		
 		return jdbc.selectOne(sql, param, MemberVo.class);
 	}
 	
+	public void memUpdatePassword(List<Object> param) {
+		String sql = " UPDATE MEMBER\r\n " + 
+				" SET MEM_PASS = ?\r\n " + 
+				" WHERE MEM_NAME = ? \r\n " + 
+				" AND MEM_CP = ? \r\n " + 
+				" AND MEM_DELYN = 'N' ";
+		jdbc.update(sql, param);
+	}
+	
+	public MemberVo memFindId(List<Object> param) {
+		String sql = " SELECT MEM_ID\r\n " + 
+				" FROM MEMBER\r\n " + 
+				" WHERE MEM_NAME = ? \r\n " + 
+				" AND MEM_CP = ? \r\n " + 
+				" AND MEM_DELYN = 'N' ";
+		
+		return jdbc.selectOne(sql, param, MemberVo.class);
+	}
+//	0415	
 	public MemberVo memberLogin(List<Object> param) {
 		String sql = " SELECT *\r\n " + 
 					 " FROM MEMBER\r\n " + 
@@ -90,7 +109,7 @@ public class MemberDao {
         public void postDelete(List<Object> param) {
             String sql = "UPDATE BOARD_POST\n" +
 					 " SET \n" +
-					 "    POST_DELYN = 'N'\n" +
+					 "    POST_DELYN = 'Y'\n" +
 					 " WHERE POST_NO = ?";
 		jdbc.update(sql, param);
         }

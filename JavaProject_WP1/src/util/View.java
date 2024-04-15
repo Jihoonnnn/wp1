@@ -8,8 +8,15 @@ public enum View {
 	MEMBER,					// 회원 기본 화면
 	ADMIN,					// 관리자 기본 화면
 	
-	FIND_ID,				// 아이디 찾기
-	FIND_PASSWORD,			// 비밀번호 찾기
+	// 0415 변경
+	MEMBER_ACCOUNT,			// 회원 계정 찾기 기본화면
+	MEMBER_FIND_ID,			// 아이디 찾기
+	MEMBER_UPDATE_PASSWORD,	// 비밀번호 찾기
+	
+	ADMIN_ACCOUNT,			// 관리자 계정 찾기 기본화면
+	ADMIN_FIND_ID,			// 아이디 찾기
+	ADMIN_UPDATE_PASSWORD,	// 비밀번호 찾기
+	// 0415 변경
 	
 	MEMBER_LOGIN,			// 회원 로그인
 	MEMBER_SIGN,			// 회원 가입
