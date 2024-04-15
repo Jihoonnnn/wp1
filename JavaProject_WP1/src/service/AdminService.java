@@ -5,6 +5,8 @@ import java.util.List;
 import controller.MainController;
 import dao.AdminDao;
 import vo.AdminVo;
+import vo.BoardVo;
+import vo.MemberVo;
 
 public class AdminService {
 	private static AdminService instance;
@@ -35,4 +37,25 @@ public class AdminService {
 	public void adminSign(List<Object> param) {
 		adminDao.adminSign(param);
 	}
+
+	public List<BoardVo> adiminBoard() {
+		return adminDao.adiminBoard();
+	}
+
+	public void commentInsert(List<Object> param) {
+		adminDao.commentInsert(param);
+	}
+
+	public void commentUpdate(List<Object> param) {
+		adminDao.commentUpdate(param);
+	}
+
+	public void commentDelete(List<Object> param) {
+		adminDao.commentDelete(param);
+	}
+
+	public List<MemberVo> signList() {
+		return adminDao.signList();
+	}
+
 }

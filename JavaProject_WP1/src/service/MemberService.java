@@ -4,6 +4,7 @@ import java.util.List;
 
 import controller.MainController;
 import dao.MemberDao;
+import vo.BoardVo;
 import vo.MemberVo;
 
 public class MemberService {
@@ -45,4 +46,20 @@ public class MemberService {
 	public void memberSign(List<Object> param) {
 		memberDao.memberSign(param);
 	}
+	
+	public List<BoardVo> memberBoard(List<Object> param) {
+		return memberDao.memberBoard(param);
+	}
+
+    public void postInsert(List<Object> param) {
+		memberDao.postInsert(param);
+	}
+
+	public void postUpdate(List<Object> param) {
+		memberDao.postUpdate(param);
+	}
+
+    public void postDelete(List<Object> param) {
+        memberDao.postDelete(param);
+    }
 }

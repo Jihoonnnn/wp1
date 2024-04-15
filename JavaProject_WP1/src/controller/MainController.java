@@ -10,6 +10,9 @@ import service.AdminService;
 import service.MemberService;
 import util.ScanUtil;
 import util.View;
+import vo.AdminVo;
+import vo.BoardVo;
+import vo.MemberVo;
 
 public class MainController extends Print{
 	static public Map<String, Object> sessionStorage = new HashMap<>(); // 데이터를 저장할 수 있게 만들어놓은 공간
@@ -57,12 +60,195 @@ public class MainController extends Print{
 			case ADMIN_SIGN:
 				view = adminSign();
 				break;
+				
+			case MEMBER:
+				view = member();
+				break;
+			case ADMIN:
+				view = admin();
+				break;
+			case MEMBER_BOARD:
+				view = memberBoard();
+				break;
+			case ADMIN_BOARD:
+				view = adminBoard();
+				break;
+			case POST_INSERT:
+				view = postInsert();
+				break;		
+			case POST_DELETE:
+				view = postDelete();
+				break;		
+			case COMMENT_INSERT:
+				view = commentInsert();
+				break;		
+			case COMMENT_UPDATE:
+				view = commentUpdate();
+				break;		
+			case COMMENT_DELETE:
+				view = commentDelete();
+				break;		
+			case SIGN_LIST:
+				view = signList();
+				break;
+				
 			default:
 				break;
 			}
 		}
 	}
 	
+	private View signList() {
+		List<MemberVo> memList = adminService.signList();
+		printSignList(memList);
+		return View.ADMIN;
+	}
+
+	private View commentDelete() {
+		AdminVo admin = (AdminVo) sessionStorage.get("admin");
+		int adNo = admin.getAd_no();
+		int no = ScanUtil.nextInt("삭제 할 글 번호 입력 : ");
+		List<Object> param = new ArrayList<Object>();
+		param.add(adNo);
+		param.add(no);
+		param.add(no);
+		adminService.commentDelete(param);
+		return View.ADMIN_BOARD;
+	}
+
+	private View commentUpdate() {
+		AdminVo admin = (AdminVo) sessionStorage.get("admin");
+		int adNo = admin.getAd_no();
+		int no = ScanUtil.nextInt("수정 할 글 번호 입력 : ");
+		String cont = ScanUtil.nextLine("답변 내용 입력 : ");
+		List<Object> param = new ArrayList<Object>();
+		param.add(adNo);
+		param.add(no);
+		param.add(cont);
+		param.add(no);
+		adminService.commentUpdate(param);
+		return View.ADMIN_BOARD;
+	}
+	
+	private View commentInsert() {
+		AdminVo admin = (AdminVo) sessionStorage.get("admin");
+		int adNo = admin.getAd_no();
+		int no = ScanUtil.nextInt("등록 할 문의 번호 입력 : ");
+		String cont = ScanUtil.nextLine("답변 내용 입력 : ");
+		List<Object> param = new ArrayList<Object>();
+		param.add(adNo);
+		param.add(no);
+		param.add(cont);
+		adminService.commentInsert(param);
+		return View.ADMIN_BOARD;
+	}
+
+	private View adminBoard() {
+		List<BoardVo> boardList = adminService.adiminBoard();
+		printAdminBoard(boardList);
+		
+		System.out.println("1. 문의글 등록");
+		System.out.println("2. 문의글 수정");
+		System.out.println("3. 문의글 삭제");
+		System.out.println("4. 홈");
+		
+		int sel = ScanUtil.nextInt("\n메뉴 선택 : ");
+		printVar();
+		switch (sel) {
+		case 1: return View.COMMENT_INSERT;
+		case 2: return View.COMMENT_UPDATE;
+		case 3: return View.COMMENT_DELETE;
+		case 4: return View.ADMIN;
+		default: return View.ADMIN_BOARD;
+		}
+	}
+
+	private View postDelete() {
+		int no = ScanUtil.nextInt("삭제 할 문의 번호 입력 : ");
+		List<Object> param = new ArrayList<Object>();
+		param.add(no);
+		memberService.postDelete(param);
+		return View.ADMIN_BOARD;
+	}
+
+	private View postInsert() {
+
+		System.out.println("/n 문의글 등록 /n");
+		
+		MemberVo member = (MemberVo) sessionStorage.get("member");
+		int memNo = member.getMem_no();
+		String title = ScanUtil.nextLine("제목 입력 : ");
+		String cont = ScanUtil.nextLine("내용 입력 : ");
+		List<Object> param = new ArrayList<Object>();
+		param.add(memNo);
+		param.add(title);
+		param.add(cont);
+		
+		memberService.postInsert(param);
+		
+		return View.MEMBER;
+	}
+
+	private View memberBoard() {
+		MemberVo member = (MemberVo) sessionStorage.get("member");
+		int memNo = member.getMem_no();
+		List<Object> param = new ArrayList<Object>();
+		param.add(memNo);
+		memberService.memberBoard(param);
+		List<BoardVo> boardList = memberService.memberBoard(param);
+		printMemberBoard(boardList);
+
+		System.out.println("1. 문의글 등록");
+		System.out.println("2. 문의글 삭제");
+		System.out.println("3. 홈");
+		
+		int sel = ScanUtil.nextInt("\n메뉴 선택 : ");
+		printVar();
+		switch (sel) {
+		case 1: return View.POST_INSERT;
+		case 2: return View.POST_DELETE;
+		case 3: return View.MEMBER;
+		default: return View.MEMBER;
+		}
+	}
+	
+	private View member() {
+		System.out.println("1. 좌석/룸 예약");
+		System.out.println("2. 예약 현황");
+		System.out.println("3. 포인트 충전");
+		System.out.println("4. 문의글");
+		System.out.println("5. 마이페이지");
+		System.out.println("6. 로그아웃");
+		
+		int sel = ScanUtil.nextInt("\n메뉴 선택 : ");
+		printVar();
+		switch (sel) {
+		case 1: return View.HOME;
+		case 2: return View.HOME;
+		case 3: return View.HOME;
+		case 4: return View.MEMBER_BOARD;
+		case 5: return View.HOME;
+		case 6: return View.HOME;
+		default: return View.HOME;
+		}
+	}
+	
+	private View admin() {
+		System.out.println("1. 예약 현황");
+		System.out.println("2. 가입 회원 조회");
+		System.out.println("3. 문의글");
+		System.out.println("4. 로그아웃");
+		
+		int sel = ScanUtil.nextInt("\n메뉴 선택 : ");
+		printVar();
+		switch (sel) {
+		case 1: return View.HOME;
+		case 2: return View.SIGN_LIST;
+		case 3: return View.ADMIN_BOARD;
+		case 4: return View.HOME;
+		default: return View.HOME;
+		}
+	}
 
 	private View findId() {
 		String name = ScanUtil.nextLine("\n회원 이름 : ");
