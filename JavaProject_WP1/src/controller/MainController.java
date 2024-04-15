@@ -49,6 +49,7 @@ public class MainController extends Print{
 			case MEMBER_UPDATE_PASSWORD:
 				view = memUpdatePassword();
 				break;
+				
 			case ADMIN_ACCOUNT:
 				view = adminAccount();
 				break;
@@ -262,7 +263,7 @@ public class MainController extends Print{
 		default: return View.HOME;
 		}
 	}
-	// 0415
+// 0415
 	private View memFindId() {
 		String name = ScanUtil.nextLine("\n회원 이름 : ");
 		String cp = ScanUtil.nextLine("\n회원 휴대폰 번호 : ");
@@ -302,20 +303,20 @@ public class MainController extends Print{
 	}
 	
 	private View adFindId() {
-		String name = ScanUtil.nextLine("\n회원 이름 : ");
-		String cp = ScanUtil.nextLine("\n회원 휴대폰 번호 : ");
+		String name = ScanUtil.nextLine("\n관리자 이름 : ");
+		String cp = ScanUtil.nextLine("\n관리자 휴대폰 번호 : ");
 		
 		List<Object> param = new ArrayList<>();
 		param.add(name);
 		param.add(cp);
 		
-		MemberVo member = memberService.memFindId(param);
-		if(member == null) {
+		AdminVo admin = adminService.adFindId(param);
+		if(admin == null) {
 			System.out.println("\n등록되지 않은 정보입니다.\n");
-			return View.MEMBER_FIND_ID;
+			return View.ADMIN_FIND_ID;
 		}
 		
-		System.out.println("\n회원 아이디 : " + member.getMem_id());
+		System.out.println("\n회원 아이디 : " + admin.getAd_id());
 		return View.LOGIN;
 	}
 	
@@ -323,20 +324,20 @@ public class MainController extends Print{
 		String name = ScanUtil.nextLine("\n회원 이름 : ");
 		String cp = ScanUtil.nextLine("\n회원 휴대폰 번호 : ");
 		
-		boolean checkMember = memberService.checkMember(name, cp);
-		if (!checkMember) {
+		boolean checkAdmin = adminService.checkAdmin(name, cp);
+		if (!checkAdmin) {
 			printVar();
 			System.out.println("\n등록되지 않은 정보입니다.\n");
 			printVar();
-			return View.MEMBER_UPDATE_PASSWORD;
+			return View.ADMIN_UPDATE_PASSWORD;
 		}
 		
 		String newPassword = ScanUtil.nextLine("\n새 비밀번호를 입력해주세요 : ");
 		System.out.println("\n비밀번호가 성공적으로 변경되었습니다.");
 		List<Object> param = new ArrayList<>();
 		param.add(newPassword);
-		memberService.memUpdatePassword(name, cp, newPassword);
-		return View.MEMBER_LOGIN;
+		adminService.adUpdatePassword(name, cp, newPassword);
+		return View.ADMIN_LOGIN;
 	}
 
 	private View account() {
@@ -347,7 +348,7 @@ public class MainController extends Print{
 		printVar();
 		switch (sel) {
 		case 1: return View.MEMBER_ACCOUNT;
-		case 2: return View.MEMBER_UPDATE_PASSWORD;
+		case 2: return View.ADMIN_ACCOUNT;
 		default: return View.ACCOUNT;
 		}
 	}
@@ -359,9 +360,9 @@ public class MainController extends Print{
 		int sel = ScanUtil.nextInt("\n메뉴 선택 : ");
 		printVar();
 		switch (sel) {
-		case 1: return View.MEMBER_FIND_ID;
-		case 2: return View.MEMBER_UPDATE_PASSWORD;
-		default: return View.ACCOUNT;
+		case 1: return View.ADMIN_FIND_ID;
+		case 2: return View.ADMIN_UPDATE_PASSWORD;
+		default: return View.ADMIN_ACCOUNT;
 		}
 	}
 	

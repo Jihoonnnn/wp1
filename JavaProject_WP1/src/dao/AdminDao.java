@@ -22,7 +22,36 @@ public class AdminDao {
 	}
 	
 	JDBCUtil jdbc = JDBCUtil.getInstance();
+	// 0415
+	public AdminVo checkAdmin(List<Object> param) {
+		String sql = " SELECT *\r\n " + 
+				" FROM ADMIN\r\n " + 
+				" WHERE AD_NAME = ? \r\n " + 
+				" AND AD_CP = ? \r\n " + 
+				" AND AD_DELYN = 'N' ";
+		
+		return jdbc.selectOne(sql, param, AdminVo.class);
+	}
 	
+	public void adUpdatePassword(List<Object> param) {
+		String sql = " UPDATE ADMIN\r\n " + 
+				" SET AD_PASS = ?\r\n " + 
+				" WHERE AD_NAME = ? \r\n " + 
+				" AND AD_CP = ? \r\n " + 
+				" AND AD_DELYN = 'N' ";
+		jdbc.update(sql, param);
+	}
+	
+	public AdminVo adFindId(List<Object> param) {
+		String sql = " SELECT AD_ID\r\n " + 
+				" FROM ADMIN\r\n " + 
+				" WHERE AD_NAME = ? \r\n " + 
+				" AND AD_CP = ? \r\n " + 
+				" AND AD_DELYN = 'N' ";
+		
+		return jdbc.selectOne(sql, param, AdminVo.class);
+	}
+//	0415
 	public AdminVo adminLogin(List<Object> param) {
 		String sql = " SELECT *\r\n " + 
 					 " FROM ADMIN\r\n " + 

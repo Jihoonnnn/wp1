@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import controller.MainController;
@@ -23,7 +24,35 @@ public class AdminService {
 	}
 	
 	AdminDao adminDao = AdminDao.getInstance();
+//	0415
+	public boolean checkAdmin(String name, String cp) {
+	    List<Object> param = new ArrayList<>();
+	    param.add(name);
+	    param.add(cp);
+	    AdminVo admin = adminDao.checkAdmin(param);
+	    if(admin == null) {
+	        return false;
+	    }
+	    MainController.sessionStorage.put("admin", admin);
+	    return true;
+	}
 	
+	public void adUpdatePassword(String name, String cp, String newPassword) {
+	    List<Object> param = new ArrayList<>();
+	    param.add(newPassword);
+	    param.add(name);
+	    param.add(cp);
+	    adminDao.adUpdatePassword(param);
+	}
+
+	public AdminVo adFindId(List<Object> param) {
+		AdminVo admin = adminDao.adFindId(param);
+		if(admin != null) {
+			MainController.sessionStorage.put("admin", admin);
+		}
+		return admin;
+	}
+//	0415
 	public boolean adminLogin(List<Object> param) {
 		AdminVo admin = adminDao.adminLogin(param);
 		if(admin == null) {
